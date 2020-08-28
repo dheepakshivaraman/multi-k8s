@@ -1,0 +1,23 @@
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -t dheepakshivaraman/client-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run -e CI=true dheepakshivaraman/client-test npm run test 
+
+after_success:
+    # Build Images
+    - docker build -t dheepakshivaraman/multi-docker-client ./client
+    - docker build -t dheepakshivaraman/multi-docker-nginx ./nginx
+    - docker build -t dheepakshivaraman/multi-docker-server ./server
+    - docker build -t dheepakshivaraman/multi-docker-worker ./worker
+    # Docker login
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # Push Images
+    - docker push dheepakshivaraman/multi-docker-client
+    - docker push dheepakshivaraman/multi-docker-nginx
+    - docker push dheepakshivaraman/multi-docker-server
+    - docker push dheepakshivaraman/multi-docker-worker
