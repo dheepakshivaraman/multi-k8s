@@ -11,6 +11,7 @@ docker push dheepakshivaraman/multi-docker-server:$GIT_SHA
 docker push dheepakshivaraman/multi-docker-worker:latest
 docker push dheepakshivaraman/multi-docker-worker:$GIT_SHA
 
+kubectl apply -f k8s
 kubectl set image deployments/client-deployment client=dheepakshivaraman/multi-docker-client:$GIT_SHA
 kubectl set image deployments/server-deployment server=dheepakshivaraman/multi-docker-server:$GIT_SHA
 kubectl set image deployments/worker-deployment worker=dheepakshivaraman/multi-docker-worker:$GIT_SHA
